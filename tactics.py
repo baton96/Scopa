@@ -28,46 +28,41 @@ def get_powerset(s):
 
 # returns the list of all possible sums of table, along with cards that are part of this combinat
 # but only if the sum is possible to be taken
-def get_takes_with_sum(s):
-    powerset = get_powerset(s)
+def get_takes_with_sum(table):
+    powerset = get_powerset(table)
     takes_with_sum = []
 
     for take_cards in powerset:
-        take_sum = sum_of_cards(take_cards)
+        take_sum = get_sum_of_cards(take_cards)
         # in scopa sums between 8 and 10 as well as anything over 13 is not a valid take
         if (1 <= take_sum <= 7) or (11 <= take_sum <= 13):
             takes_with_sum.append([take_sum, take_cards])
     return takes_with_sum
 
 
-# returns the sum of cards in a list
-def sum_of_cards(cards):
+def get_sum_of_cards(cards):
     return sum(int(card[:2]) for card in cards)
 
 
-# return true if settebello
-def settebello(cards):
+def has_settebello(cards):
     return settebello_symbol in cards
 
 
-# returns count of sevens
-def sevens(cards):
+def get_no_of_sevens(cards):
     return sum(card[1] == "7" for card in cards)
 
 
-# returns count of denars
-def denars(cards):
+def get_no_of_denars(cards):
     return sum(card[2] == denaro for card in cards)
 
 
-# get the score for take
 def get_score_for_take(take, table):
     card_from_hand, cards_from_table = take
     all_cards = list(cards_from_table) + [card_from_hand]
-    score  = settebello(all_cards) * settebello_factor
-    score += denars(all_cards) * denar_factor
+    score  = has_settebello(all_cards) * settebello_factor
+    score += get_no_of_denars(all_cards) * denar_factor
     score += len(cards_from_table) * card_factor
-    score += sevens(all_cards) * seven_factor
+    score += get_no_of_sevens(all_cards) * seven_factor
 
     no_cards_taken = len(cards_from_table)
     score_bonuses = {

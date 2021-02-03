@@ -202,7 +202,7 @@ class ScopaForm(QDialog):
                 table.append(table_btn.text())
                 table_card_set=True
 
-        sum_of_table=tactics.sum_of_cards(table)
+        sum_of_table= tactics.get_sum_of_cards(table)
 
         hand_card_set=False
         hand_card_value=-1
@@ -263,13 +263,13 @@ class ScopaForm(QDialog):
             self.sc.piles[self.last_claimed_hand].append(card)
             self.sc.table.remove(card)
 
-        my_score = self.sc.calculate_score(0)
-        opponent_score = self.sc.calculate_score(1)
+        my_score = self.sc.get_score(0)
+        opponent_score = self.sc.get_score(1)
 
         message = "Moje karty: " + str(len(self.sc.piles[0])) + ", w tym denarów "
-        message += str(tactics.denars(self.sc.piles[0])) + ", wynik: " + str(my_score)
+        message += str(tactics.get_no_of_denars(self.sc.piles[0])) + ", wynik: " + str(my_score)
         message += "\nPrzeciwnika: " + str(len(self.sc.piles[1])) + ", w tym denarów "
-        message += str(tactics.denars(self.sc.piles[1])) + " wynik: " + str(opponent_score)
+        message += str(tactics.get_no_of_denars(self.sc.piles[1])) + " wynik: " + str(opponent_score)
 
 
         msg = QMessageBox()

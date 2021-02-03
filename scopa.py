@@ -60,7 +60,7 @@ class Scopa:
     def print_game_results(self):
         print(f"Scopas: {self.scopa_count}")
         for s in range(no_of_players):
-            pile_score = self.calculate_score(s)
+            pile_score = self.get_score(s)
             print(f"Score for hand {s}, cards {len(self.piles[s])} ({self.piles[s]}) is {pile_score}")
 
     def print_short_status(self):
@@ -84,7 +84,7 @@ class Scopa:
             print(f"Pile size: {len(pile)}, content: {pile}")
         print("===========\n")
 
-    def get_no_of_cards(self):
+    def check_no_of_cards(self):
         no_of_cards = len(self.table) + len(self.deck)
         for hand in self.hands:
             no_of_cards += len(hand)
@@ -94,7 +94,7 @@ class Scopa:
             print(f"Sum is {no_of_cards} instead of 40")
             exit(1)
 
-    def possible_takes(self, hand):
+    def get_possible_takes(self, hand):
         takes_with_sum = tactics.get_takes_with_sum(self.table)
         filtered_takes = []
         for take_sum, take_cards in takes_with_sum:
@@ -144,7 +144,7 @@ class Scopa:
             return [lowest_card, []]
 
     def get_best_take(self, hand):
-        potential_takes = self.possible_takes(hand)
+        potential_takes = self.get_possible_takes(hand)
         best_take_score = -1
         best_take_index = -1
         for i, potential_take in enumerate(potential_takes):
@@ -172,27 +172,27 @@ class Scopa:
             pile.append(card_from_table)
 
     # this function calculates results of a pile with given number
-    def calculate_score(self, pile_number):
+    def get_score(self, pile_number):
         pile = self.piles[pile_number]
         score = 0
         # one point for settebello
-        if tactics.settebello(pile):
+        if tactics.has_settebello(pile):
             score += 1
 
         # check if any other hand has more or the same number of sevens, cards and denars
-        no_of_sevens = tactics.sevens(pile)
+        no_of_sevens = tactics.get_no_of_sevens(pile)
         more_sevens = True
         no_of_cards = len(pile)
         more_cards = True
-        no_of_denars = tactics.denars(pile)
+        no_of_denars = tactics.get_no_of_denars(pile)
         more_denars = True
         for other_pile in self.piles:
             if other_pile != pile:
-                if tactics.sevens(other_pile) >= no_of_sevens:
+                if tactics.get_no_of_sevens(other_pile) >= no_of_sevens:
                     more_sevens = False
                 if len(other_pile) >= no_of_cards:
                     more_cards = False
-                if tactics.denars(other_pile) >= no_of_denars:
+                if tactics.get_no_of_denars(other_pile) >= no_of_denars:
                     more_denars = False
 
         # add one point for each
