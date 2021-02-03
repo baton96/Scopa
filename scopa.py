@@ -1,7 +1,6 @@
 from random import shuffle
 import tactics
 
-# all possible colors: Denari, Bastoni, Spade, Coppe
 colors = [tactics.denaro, " ", " ", " "]
 hand_size = 3
 initial_table_size = 4
@@ -27,10 +26,11 @@ class Scopa:
 
     def __init__(self):
         self.generate_deck()
-        # self.deck = ['03 ', '06 ', '05 ', '12 ', '01 ', '12*', '05*', '03 ', '02 ', '03 ', '11*', '05 ', '04 ', '03*', '01 ', '04*', '06*', '04 ', '02 ', '07 ', '13 ', '13*', '01*', '01 ', '07 ', '07*', '11 ', '07 ', '02 ', '12 ', '13 ', '06 ', '12 ', '11 ', '06 ', '04 ', '13 ', '02*', '05 ', '11 ']
+        # self.deck = ['03 ', '06 ', '05 ', '12 ', '01 ', '12*', '05*', '03 ', '02 ', '03 ', '11*', '05 ', '04 ', '03*',
+        # '01 ', '04*', '06*', '04 ', '02 ', '07 ', '13 ', '13*', '01*', '01 ', '07 ', '07*', '11 ', '07 ',
+        # '02 ', '12 ', '13 ', '06 ', '12 ', '11 ', '06 ', '04 ', '13 ', '02*', '05 ', '11 ']
         self.initiate_play()
 
-    # this method generates random deck
     def generate_deck(self):
         self.deck = []
         for color in colors:
@@ -60,7 +60,6 @@ class Scopa:
 
     def print_game_results(self):
         print(f"Scopas: {self.scopa_count}")
-        # calculate results
         for s in range(no_of_players):
             pile_score = self.calculate_score(s)
             print(f"Score for hand {s}, cards {len(self.piles[s])} ({self.piles[s]}) is {pile_score}")
@@ -96,7 +95,6 @@ class Scopa:
             print(f"Sum is {cards_sum} instead of 40")
             exit(1)
 
-    # returns possible takes - each item in the list is a couple: card from hand, cards to be taken
     def possible_takes(self, hand):
         takes_with_sum = tactics.all_takes_with_sum(self.table)
         filtered_takes = []
@@ -127,23 +125,19 @@ class Scopa:
         if len(self.hands[hand_number]) == 0:
             self.draw_hand(self.hands[hand_number])
 
-        # get potential takes
         potential_takes = self.possible_takes(self.hands[hand_number])
-
-        # iterate through possible takes and check what is the best - if any
+        # find best possible take
         best_take_score = -1
         best_take_index = no_take
         for t in range(len(potential_takes)):
             # remember the last hand played
             self.last_hand_played = hand_number
-            # check what is the score
             current_take_score = tactics.get_score_for_take(potential_takes[t], self.table)
             if current_take_score > best_take_score:
                 best_take_index = t
                 best_take_score = current_take_score
 
-        # best_take_index will contain the index of best take
-        # if there is any take, take the best
+        # if best possible take found
         if best_take_index != no_take:
             # remove card from hand and add it to the pile
             card_from_hand = potential_takes[best_take_index][0]
