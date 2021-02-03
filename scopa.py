@@ -87,15 +87,13 @@ class Scopa:
         print("===========\n")
 
     def check_sum_of_cards(self):
-        csum = len(self.table)
-        csum += len(self.deck)
+        cards_sum = len(self.table) + len(self.deck)
         for hand in self.hands:
-            csum += len(hand)
+            cards_sum += len(hand)
         for pile in self.piles:
-            csum += len(pile)
-
-        if csum != 40:
-            print(f"Sum is {csum} instead of 40")
+            cards_sum += len(pile)
+        if cards_sum != 40:
+            print(f"Sum is {cards_sum} instead of 40")
             exit(1)
 
     # returns possible takes - each item in the list is a couple: card from hand, cards to be taken
@@ -114,11 +112,10 @@ class Scopa:
 
     # return sum of cards in hands and deck
     def sum_of_all_cards_in_game(self):
-        csum = 0
-        csum += len(self.deck)
+        cards_sum = len(self.deck)
         for hand in self.hands:
-            csum += len(hand)
-        return csum
+            cards_sum += len(hand)
+        return cards_sum
 
     # draw hand if necessary, return True is game should be ended
     def draw_hand_if_necessary(self, hand_no):

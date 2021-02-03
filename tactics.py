@@ -43,10 +43,10 @@ def all_takes_with_sum(s):
 
 
 # returns the sum of cards in a list
-def sum_of_cards(clist):
+def sum_of_cards(cards):
     val = 0
-    for i in range(len(clist)):
-        card_val = clist[i][:2]
+    for i in range(len(cards)):
+        card_val = cards[i][:2]
         val = val + int(card_val)
     return val
 
