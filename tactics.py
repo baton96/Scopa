@@ -52,10 +52,7 @@ def sum_of_cards(cards):
 
 # return true if settebello
 def settebello(cards):
-    for card in cards:
-        if card == settebello_symbol:
-            return True
-    return False
+    return settebello_symbol in cards
 
 
 # returns count of sevens
