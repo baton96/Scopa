@@ -154,11 +154,12 @@ class Scopa:
             return potential_takes[best_take_index]
 
         else:
-            # no cards can be taken, drop a card
-            card_to_be_dropped = tactics.select_card_to_be_dropped(self.hands[hand_number], self.table)
-            self.hands[hand_number].remove(card_to_be_dropped)
-            self.table.append(card_to_be_dropped)
-            return [card_to_be_dropped, []]
+            # no cards can be taken, drop lowest card
+            hand = self.hands[hand_number]
+            lowest_card = min(hand, key=lambda card: int(card[:2]))
+            self.hands[hand_number].remove(lowest_card)
+            self.table.append(lowest_card)
+            return [lowest_card, []]
 
     # this function calculates results of a pile with given number
     def calculate_score(self, pile_number):

@@ -96,13 +96,3 @@ def get_score_for_take(take, table):
         score += leaving_single_card_factor
 
     return score
-
-
-# this function selects a card to be dropped from table
-def select_card_to_be_dropped(hand, table):
-    # drop the lowest
-    lowest = hand[0]
-    for i in range(1, len(hand)):
-        if int(lowest[:1]) > int(hand[i][:1]):
-            lowest = hand[i]
-    return lowest
