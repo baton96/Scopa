@@ -43,11 +43,7 @@ def all_takes_with_sum(s):
 
 # returns the sum of cards in a list
 def sum_of_cards(cards):
-    val = 0
-    for i in range(len(cards)):
-        card_val = cards[i][:2]
-        val = val + int(card_val)
-    return val
+    return sum(int(card[:2]) for card in cards)
 
 
 # return true if settebello
@@ -57,20 +53,12 @@ def settebello(cards):
 
 # returns count of sevens
 def sevens(cards):
-    sevens_count = 0
-    for card in cards:
-        if card[1] == "7":
-            sevens_count += 1
-    return sevens_count
+    return sum(card[1] == "7" for card in cards)
 
 
 # returns count of denars
 def denars(cards):
-    denars_count = 0
-    for card in cards:
-        if card[2] == denaro:
-            denars_count += 1
-    return denars_count
+    return sum(card[2] == denaro for card in cards)
 
 
 # get the score for take
