@@ -16,7 +16,7 @@ card_factor = 1
 seven_factor = 5
 denar_factor = 2
 scopa_factor = 10
-leaving_single_card_factor = -3
+leaving_one_card_factor = -3
 leaving_two_cards_factor = -1
 
 
@@ -63,20 +63,19 @@ def denars(cards):
 
 # get the score for take
 def get_score_for_take(take, table):
-    score = len(take[1]*card_factor)
-    if take[0] == "07D" or settebello(take[1]):
-        score += settebello_factor
-    if take[0][2] == denaro:
-        score += denar_factor
-    score += (denars(take[1]) * denar_factor)
-    if take[0][1] == "7":
-        score += seven_factor
-    score += (sevens(take[1]) * seven_factor)
-    if len(take[1]) == len(table):
-        score += scopa_factor
-    if len(take[1])+2 == len(table):
-        score += leaving_two_cards_factor
-    if len(take[1])+1 == len(table):
-        score += leaving_single_card_factor
+    card_from_hand, cards_from_table = take
+    all_cards = list(cards_from_table) + [card_from_hand]
+    score  = settebello(all_cards) * settebello_factor
+    score += denars(all_cards) * denar_factor
+    score += len(cards_from_table) * card_factor
+    score += sevens(all_cards) * seven_factor
+
+    no_cards_taken = len(cards_from_table)
+    score_bonuses = {
+        no_cards_taken + 0: scopa_factor,
+        no_cards_taken + 1: leaving_one_card_factor,
+        no_cards_taken + 2: leaving_two_cards_factor
+    }
+    score += score_bonuses.get(len(table), 0)
 
     return score
