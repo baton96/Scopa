@@ -20,9 +20,9 @@ leaving_one_card_factor = -3
 leaving_two_cards_factor = -1
 
 
-def get_powerset(s):
+def get_powerset(table):
     return chain.from_iterable(
-        combinations(s, r) for r in range(len(s) + 1)
+        combinations(table, size) for size in range(len(table) + 1)
     )
 
 
