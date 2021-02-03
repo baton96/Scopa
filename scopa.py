@@ -65,6 +65,13 @@ class Scopa:
             pile_score = self.calculate_score(s)
             print(f"Score for hand {s}, cards {len(self.piles[s])} ({self.piles[s]}) is {pile_score}")
 
+    def print_short_status(self):
+        print("===========")
+        print("Table:", self.table)
+        print("Hands", self.hands)
+        for pile in self.piles:
+            print(f"Pile size: {len(pile)}, content: {pile}")
+
     def print_status(self):
         print("===========")
         print("Table:")
