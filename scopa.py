@@ -100,14 +100,11 @@ class Scopa:
     def possible_takes(self, hand):
         takes_with_sum = tactics.all_takes_with_sum(self.table)
         filtered_takes = []
-        for take in takes_with_sum:
+        for take_sum, take_cards in takes_with_sum:
             for card in hand:
-                take_sum = take[0]
                 card_value = int(card[:2])
                 if card_value == take_sum:
-                    # build list where each item is a list: card from hand, cards to be taken
-                    filtered_takes.append([card, take[1]])
-
+                    filtered_takes.append([card, take_cards])
         return filtered_takes
 
     # return sum of cards in hands and deck
