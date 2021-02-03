@@ -5,7 +5,6 @@ colors = [tactics.denaro, " ", " ", " "]
 hand_size = 3
 initial_table_size = 4
 no_of_players = 2
-no_take = -99
 
 
 class Scopa:
@@ -128,23 +127,23 @@ class Scopa:
         potential_takes = self.possible_takes(self.hands[hand_number])
         # find best possible take
         best_take_score = -1
-        best_take_index = no_take
-        for t in range(len(potential_takes)):
+        best_take_index = -1
+        for i, potential_take in enumerate(potential_takes):
             # remember the last hand played
             self.last_hand_played = hand_number
-            current_take_score = tactics.get_score_for_take(potential_takes[t], self.table)
+            current_take_score = tactics.get_score_for_take(potential_take, self.table)
             if current_take_score > best_take_score:
-                best_take_index = t
+                best_take_index = i
                 best_take_score = current_take_score
 
         # if best possible take found
-        if best_take_index != no_take:
+        if best_take_index != -1:
             # remove card from hand and add it to the pile
-            card_from_hand = potential_takes[best_take_index][0]
+            card_from_hand, cards_from_table = potential_takes[best_take_index]
             self.hands[hand_number].remove(card_from_hand)
             self.piles[hand_number].append(card_from_hand)
             # remove cards from the table and add them to the pile
-            for card in potential_takes[best_take_index][1]:
+            for card in cards_from_table:
                 self.table.remove(card)
                 self.piles[hand_number].append(card)
 
