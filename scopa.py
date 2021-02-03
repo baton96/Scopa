@@ -178,11 +178,12 @@ class Scopa:
         more_denars = True
         for i in range(len(self.piles)):
             if i != pile_number:
-                if tactics.sevens(self.piles[i]) >= no_of_sevens:
+                other_pile = self.piles[i]
+                if tactics.sevens(other_pile) >= no_of_sevens:
                     more_sevens = False
-                if len(self.piles[i]) >= no_of_cards:
+                if len(other_pile) >= no_of_cards:
                     more_cards = False
-                if tactics.denars(self.piles[i]) >= no_of_denars:
+                if tactics.denars(other_pile) >= no_of_denars:
                     more_denars = False
 
         # add one point for each
