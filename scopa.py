@@ -52,10 +52,10 @@ class Scopa:
 
     # create table, hands, piles and scopa count
     def initiate_play(self):
-        for i in range(0, initial_table_size):
+        for _ in range(initial_table_size):
             self.table.append(self.deck.pop())
 
-        for p in range(0, no_of_players):
+        for _ in range(no_of_players):
             hand = []
             self.draw_hand(hand)
             self.hands.append(hand)
@@ -66,14 +66,14 @@ class Scopa:
     def draw_hand(self, hand):
         if len(self.deck) == 0:
             return False
-        for c in range(0, hand_size):
+        for _ in range(hand_size):
             hand.append(self.deck.pop())
         return True
 
     def print_game_results(self):
         print("Scopas: " + str(self.scopa_count))
         # calculate results
-        for s in range(0, no_of_players):
+        for s in range(no_of_players):
             pile_score = self.calculate_score(s)
 
             print("Score for hand " + str(s) + ", cards " + str(len(self.piles[s])) + " ("
@@ -146,7 +146,7 @@ class Scopa:
         # iterate through possible takes and check what is the best - if any
         best_take_score = -1
         best_take_index = no_take
-        for t in range(0, len(potential_takes)):
+        for t in range(len(potential_takes)):
             # remember the last hand played
             self.last_hand_played = hand_number
             # check what is the score
@@ -194,7 +194,7 @@ class Scopa:
         more_cards = True
         no_of_denars = tactics.denars(self.piles[pile_number])
         more_denars = True
-        for i in range(0, len(self.piles)):
+        for i in range(len(self.piles)):
             if i != pile_number:
                 if tactics.sevens(self.piles[i]) >= no_of_sevens:
                     more_sevens = False
