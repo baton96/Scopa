@@ -59,13 +59,11 @@ class Scopa:
         return True
 
     def print_game_results(self):
-        print("Scopas: " + str(self.scopa_count))
+        print(f"Scopas: {self.scopa_count}")
         # calculate results
         for s in range(no_of_players):
             pile_score = self.calculate_score(s)
-
-            print("Score for hand " + str(s) + ", cards " + str(len(self.piles[s])) + " ("
-                  + str(self.piles[s]) + ") is " + str(pile_score))
+            print(f"Score for hand {s}, cards {len(self.piles[s])} ({self.piles[s]}) is {pile_score}")
 
     def print_status(self):
         print("===========")
@@ -78,7 +76,7 @@ class Scopa:
         print("Scopas")
         print(self.scopa_count)
         for pile in self.piles:
-            print("Pile size: "+str(len(pile))+", content: "+str(pile))
+            print(f"Pile size: {len(pile)}, content: {pile}")
         print("===========\n")
 
     def check_sum_of_cards(self):
@@ -90,7 +88,7 @@ class Scopa:
             csum += len(pile)
 
         if csum != 40:
-            print("Sum is "+str(sum)+" instead of 40")
+            print(f"Sum is {csum} instead of 40")
             exit(1)
 
     # returns possible takes - each item in the list is a couple: card from hand, cards to be taken
