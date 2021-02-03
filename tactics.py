@@ -20,24 +20,23 @@ leaving_one_card_factor = -3
 leaving_two_cards_factor = -1
 
 
-def powerset(s):
-    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
+def get_powerset(s):
+    return chain.from_iterable(
+        combinations(s, r) for r in range(len(s) + 1)
+    )
 
 
 # returns the list of all possible sums of table, along with cards that are part of this combinat
 # but only if the sum is possible to be taken
-def all_takes_with_sum(s):
-    # store all the sublists
-    ps = powerset(s)
+def get_takes_with_sum(s):
+    powerset = get_powerset(s)
     takes_with_sum = []
 
-    for cset in ps:
-        take_sum = sum_of_cards(cset)
-        # if the sum is equal or smaller than threshold, append it -
+    for take_cards in powerset:
+        take_sum = sum_of_cards(take_cards)
         # in scopa sums between 8 and 10 as well as anything over 13 is not a valid take
         if (1 <= take_sum <= 7) or (11 <= take_sum <= 13):
-            takes_with_sum.append([take_sum, cset])
-
+            takes_with_sum.append([take_sum, take_cards])
     return takes_with_sum
 
 

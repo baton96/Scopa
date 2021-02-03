@@ -95,7 +95,7 @@ class Scopa:
             exit(1)
 
     def possible_takes(self, hand):
-        takes_with_sum = tactics.all_takes_with_sum(self.table)
+        takes_with_sum = tactics.get_takes_with_sum(self.table)
         filtered_takes = []
         for take_sum, take_cards in takes_with_sum:
             for card in hand:
