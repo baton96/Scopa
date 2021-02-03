@@ -9,11 +9,11 @@ import tactics
 def remove_all_widgets(layout):
     widget_range = reversed(range(layout.count()))
     for i in widget_range:
-        widgetToRemove = layout.itemAt(i).widget()
+        widget_to_remove = layout.itemAt(i).widget()
         # remove it from the layout list
-        layout.removeWidget(widgetToRemove)
+        layout.removeWidget(widget_to_remove)
         # remove it from the gui
-        widgetToRemove.setParent(None)
+        widget_to_remove.setParent(None)
 
 
 # noinspection PyArgumentList

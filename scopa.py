@@ -8,7 +8,7 @@ initial_table_size = 4
 no_of_players = 2
 
 
-class Scopa:
+class Scopa(object):
     # card deck
     deck = []
     # all hands
