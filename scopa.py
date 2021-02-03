@@ -105,11 +105,11 @@ class Scopa:
         return filtered_takes
 
     # return sum of cards in hands and deck
-    def sum_of_all_cards_in_game(self):
-        cards_sum = len(self.deck)
+    def get_no_of_cards_in_game(self):
+        no_of_cards = len(self.deck)
         for hand in self.hands:
-            cards_sum += len(hand)
-        return cards_sum
+            no_of_cards += len(hand)
+        return no_of_cards
 
     # draw hand if necessary, return True is game should be ended
     def draw_hand_if_necessary(self, hand_no):

@@ -12,7 +12,7 @@ import uipyqt
 # this is the main game loop
 def run_game():
     sc = scopa.Scopa()
-    while sc.sum_of_all_cards_in_game() != 0:
+    while sc.get_no_of_cards_in_game() != 0:
         for h in range(scopa.no_of_players):
             # sc.print_short_status()
             sc.play_hand(h)
