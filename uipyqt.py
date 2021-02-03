@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QGroupBox, QPushButton, QMessageBox
 
 import tactics
 

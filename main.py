@@ -3,8 +3,6 @@
 
 import sys
 
-from PyQt5.QtWidgets import *
-
 import scopa
 import uipyqt
 
@@ -25,7 +23,7 @@ def run_game():
 
 
 def run_game_with_form():
-    app = QApplication(sys.argv)
+    app = uipyqt.QApplication(sys.argv)
     sc = scopa.Scopa()
     ex = uipyqt.ScopaForm(sc)
 
@@ -36,6 +34,4 @@ def run_game_with_form():
 
 
 if __name__ == '__main__':
-    # run_game_with_form()
-    # print_status()
     run_game()
