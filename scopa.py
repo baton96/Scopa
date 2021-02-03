@@ -127,21 +127,12 @@ class Scopa:
         if len(hand) == 0:
             self.draw_hand(hand)
 
-        potential_takes = self.possible_takes(hand)
-        # find best possible take
-        best_take_score = -1
-        best_take_index = -1
-        for i, potential_take in enumerate(potential_takes):
-            current_take_score = tactics.get_score_for_take(potential_take, self.table)
-            if current_take_score > best_take_score:
-                best_take_index = i
-                best_take_score = current_take_score
-
+        best_take = self.get_best_take(hand)
         # if best possible take found
-        if best_take_index != -1:
+        if best_take:
             pile = self.piles[hand_number]
             # remove card from hand and add it to the pile
-            card_from_hand, cards_from_table = potential_takes[best_take_index]
+            card_from_hand, cards_from_table = best_take
             hand.remove(card_from_hand)
             pile.append(card_from_hand)
             # remove cards from the table and add them to the pile
@@ -151,7 +142,7 @@ class Scopa:
             # if no cards left on the table, increase scopa count
             if len(self.table) == 0 and not len(self.deck) == 0:
                 self.scopa_count[hand_number] += 1
-            return potential_takes[best_take_index]
+            return best_take
 
         else:
             # no cards can be taken, drop lowest card
@@ -159,6 +150,22 @@ class Scopa:
             hand.remove(lowest_card)
             self.table.append(lowest_card)
             return [lowest_card, []]
+
+    def get_best_take(self, hand):
+        potential_takes = self.possible_takes(hand)
+        best_take_score = -1
+        best_take_index = -1
+        for i, potential_take in enumerate(potential_takes):
+            current_take_score = tactics.get_score_for_take(potential_take, self.table)
+            if current_take_score > best_take_score:
+                best_take_index = i
+                best_take_score = current_take_score
+
+        best_take = None
+        # if best possible take found
+        if best_take_index != -1:
+            best_take = potential_takes[best_take_index]
+        return best_take
 
     # this function calculates results of a pile with given number
     def calculate_score(self, pile_number):
