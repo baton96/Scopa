@@ -130,15 +130,7 @@ class Scopa:
         best_take = self.get_best_take(hand)
         # if best possible take found
         if best_take:
-            pile = self.piles[hand_number]
-            # remove card from hand and add it to the pile
-            card_from_hand, cards_from_table = best_take
-            hand.remove(card_from_hand)
-            pile.append(card_from_hand)
-            # remove cards from the table and add them to the pile
-            for card_from_table in cards_from_table:
-                self.table.remove(card_from_table)
-                pile.append(card_from_table)
+            self.move_cards_from_take_to_pile(hand_number, best_take)
             # if no cards left on the table, increase scopa count
             if len(self.table) == 0 and not len(self.deck) == 0:
                 self.scopa_count[hand_number] += 1
@@ -166,6 +158,18 @@ class Scopa:
         if best_take_index != -1:
             best_take = potential_takes[best_take_index]
         return best_take
+
+    def move_cards_from_take_to_pile(self, hand_number, take):
+        card_from_hand, cards_from_table = take
+        pile = self.piles[hand_number]
+
+        hand = self.hands[hand_number]
+        hand.remove(card_from_hand)
+        pile.append(card_from_hand)
+
+        for card_from_table in cards_from_table:
+            self.table.remove(card_from_table)
+            pile.append(card_from_table)
 
     # this function calculates results of a pile with given number
     def calculate_score(self, pile_number):
