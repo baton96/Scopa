@@ -120,17 +120,18 @@ class Scopa:
 
     # this function plays single hand with hand number
     def play_hand(self, hand_number):
-        # draw hand if hand is empty
-        if len(self.hands[hand_number]) == 0:
-            self.draw_hand(self.hands[hand_number])
+        # remember the last hand played
+        self.last_hand_played = hand_number
+        hand = self.hands[hand_number]
+        # draw hand if empty
+        if len(hand) == 0:
+            self.draw_hand(hand)
 
-        potential_takes = self.possible_takes(self.hands[hand_number])
+        potential_takes = self.possible_takes(hand)
         # find best possible take
         best_take_score = -1
         best_take_index = -1
         for i, potential_take in enumerate(potential_takes):
-            # remember the last hand played
-            self.last_hand_played = hand_number
             current_take_score = tactics.get_score_for_take(potential_take, self.table)
             if current_take_score > best_take_score:
                 best_take_index = i
@@ -138,14 +139,15 @@ class Scopa:
 
         # if best possible take found
         if best_take_index != -1:
+            pile = self.piles[hand_number]
             # remove card from hand and add it to the pile
             card_from_hand, cards_from_table = potential_takes[best_take_index]
-            self.hands[hand_number].remove(card_from_hand)
-            self.piles[hand_number].append(card_from_hand)
+            hand.remove(card_from_hand)
+            pile.append(card_from_hand)
             # remove cards from the table and add them to the pile
             for card_from_table in cards_from_table:
                 self.table.remove(card_from_table)
-                self.piles[hand_number].append(card_from_table)
+                pile.append(card_from_table)
             # if no cards left on the table, increase scopa count
             if len(self.table) == 0 and not len(self.deck) == 0:
                 self.scopa_count[hand_number] += 1
@@ -153,9 +155,8 @@ class Scopa:
 
         else:
             # no cards can be taken, drop lowest card
-            hand = self.hands[hand_number]
             lowest_card = min(hand, key=lambda card: int(card[:2]))
-            self.hands[hand_number].remove(lowest_card)
+            hand.remove(lowest_card)
             self.table.append(lowest_card)
             return [lowest_card, []]
 
