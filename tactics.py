@@ -1,3 +1,5 @@
+from itertools import chain, combinations
+
 denaro = "*"
 settebello_symbol = "07"+denaro
 lay_card_button_name = "Połóż kartę"
@@ -19,10 +21,7 @@ leaving_two_cards_factor = -1
 
 
 def powerset(s):
-    x = len(s)
-    masks = [1 << i for i in range(x)]
-    for i in range(1 << x):
-        yield [ss for mask, ss in zip(masks, s) if i & mask]
+    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
 # returns the list of all possible sums of table, along with cards that are part of this combinat
