@@ -176,9 +176,8 @@ class Scopa:
         more_cards = True
         no_of_denars = tactics.denars(pile)
         more_denars = True
-        for i in range(len(self.piles)):
-            if i != pile_number:
-                other_pile = self.piles[i]
+        for other_pile in self.piles:
+            if other_pile != pile:
                 if tactics.sevens(other_pile) >= no_of_sevens:
                     more_sevens = False
                 if len(other_pile) >= no_of_cards:
