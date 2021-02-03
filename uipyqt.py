@@ -2,6 +2,18 @@ import sys
 from PyQt5.QtWidgets import *
 import tactics
 
+# removes all widgets from given layout
+def remove_all_widgets(layout):
+    widget_range=reversed(range(layout.count()))
+    for i in widget_range:
+        widgetToRemove = layout.itemAt(i).widget()
+        # remove it from the layout list
+        layout.removeWidget(widgetToRemove)
+        # remove it from the gui
+        widgetToRemove.setParent(None)
+
+
+# noinspection PyArgumentList
 class ScopaForm(QDialog):
 
     opponent_buttons = []
@@ -58,28 +70,17 @@ class ScopaForm(QDialog):
         self.setLayout(self.main_layout)
         self.setWindowTitle("Scopa")
 
-    # removes all widgets from given layout
-    def remove_all_widgets(self, layout):
-        widget_range=reversed(range(layout.count()))
-        for i in widget_range:
-            widgetToRemove = layout.itemAt(i).widget()
-            button_name = widgetToRemove.text()
-            # remove it from the layout list
-            layout.removeWidget(widgetToRemove)
-            # remove it from the gui
-            widgetToRemove.setParent(None)
-
     # this function clears the form from all items in the view
     # empties all the global collections
     # and sets all the flags to False
     def clear_form(self):
-        self.remove_all_widgets(self.opponent_hand_layout)
+        remove_all_widgets(self.opponent_hand_layout)
         self.opponent_buttons=[]
 
-        self.remove_all_widgets(self.vbox)
+        remove_all_widgets(self.vbox)
         self.table_buttons=[]
 
-        self.remove_all_widgets(self.my_hand_layout)
+        remove_all_widgets(self.my_hand_layout)
         self.my_hand_buttons=[]
 
     # sets buttons "Claim cards" and "Lay card" as visible, OK as invisible
@@ -104,16 +105,18 @@ class ScopaForm(QDialog):
             self.opponent_hand_layout.addWidget(displayed_button)
             self.opponent_buttons.append(displayed_button)
 
-        for opponent_card in self.sc.hands[1]:
+        for _ in self.sc.hands[1]:
             opponent_button = QPushButton("XX")
             opponent_button.setEnabled(False)
             # add button for each opponent hand
             self.opponent_hand_layout.addWidget(opponent_button)
             self.opponent_buttons.append(opponent_button)
 
-    def draw_table(self, disable_cards_not_displayed, cards_to_display=[]):
+    def draw_table(self, disable_cards_not_displayed, cards_to_display=None):
 
         # show button for each card on the table
+        if cards_to_display is None:
+            cards_to_display = []
         for table_card in self.sc.table:
             table_button = QPushButton(table_card)
             table_button.setGeometry(200, 150, 100, 40)
@@ -148,7 +151,6 @@ class ScopaForm(QDialog):
     # this method prepares the form for my move
     def my_move(self):
         self.sc.draw_hand_if_necessary(0)
-        my_hand=self.sc.hands[0]
         self.clear_form()
 
         self.draw_opponent_hand()
