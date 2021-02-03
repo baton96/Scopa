@@ -1,4 +1,4 @@
-import random
+from random import shuffle
 import tactics
 
 # all possible colors: Denari, Bastoni, Spade, Coppe
@@ -32,23 +32,11 @@ class Scopa:
 
     # this method generates random deck
     def generate_deck(self):
-        all_cards = []
-        for color in colors:
-            for i in range(1, 8):
-                card = "0" + str(i) + color
-                all_cards.append(card)
-            for j in range(11, 14):
-                card = str(j) + color
-                all_cards.append(card)
-
         self.deck = []
-        while len(all_cards) > 0:
-            pos = random.randint(0, len(all_cards) - 1)
-            random_card = all_cards[pos]
-            all_cards.remove(random_card)
-            self.deck.append(random_card)
-
-        print (self.deck)
+        for color in colors:
+            self.deck += [f'0{i}{color}' for i in range(1, 8)]
+            self.deck += [f'{i}{color}' for i in range(11, 14)]
+        shuffle(self.deck)
 
     # create table, hands, piles and scopa count
     def initiate_play(self):
