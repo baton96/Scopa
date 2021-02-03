@@ -84,14 +84,14 @@ class Scopa:
             print(f"Pile size: {len(pile)}, content: {pile}")
         print("===========\n")
 
-    def check_sum_of_cards(self):
-        cards_sum = len(self.table) + len(self.deck)
+    def get_no_of_cards(self):
+        no_of_cards = len(self.table) + len(self.deck)
         for hand in self.hands:
-            cards_sum += len(hand)
+            no_of_cards += len(hand)
         for pile in self.piles:
-            cards_sum += len(pile)
-        if cards_sum != 40:
-            print(f"Sum is {cards_sum} instead of 40")
+            no_of_cards += len(pile)
+        if no_of_cards != 40:
+            print(f"Sum is {no_of_cards} instead of 40")
             exit(1)
 
     def possible_takes(self, hand):

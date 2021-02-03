@@ -16,7 +16,7 @@ def run_game():
         for h in range(scopa.no_of_players):
             # sc.print_short_status()
             sc.play_hand(h)
-            sc.check_sum_of_cards()
+            sc.get_no_of_cards()
     # if any cards were left on the table, get them to the last person taking cards from the table
     for card in sc.table.copy():
         sc.piles[sc.last_hand_played].append(card)
