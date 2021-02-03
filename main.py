@@ -2,9 +2,11 @@
 # Scopa rules can be found here https://en.wikipedia.org/wiki/Scopa
 
 import sys
-import uipyqt
-import scopa
+
 from PyQt5.QtWidgets import *
+
+import scopa
+import uipyqt
 
 
 # this is the main game loop
@@ -19,7 +21,6 @@ def run_game():
     for card in sc.table.copy():
         sc.piles[sc.last_hand_played].append(card)
         sc.table.remove(card)
-
     sc.print_game_results()
 
 
@@ -36,6 +37,5 @@ def run_game_with_form():
 
 if __name__ == '__main__':
     # run_game_with_form()
-
     # print_status()
     run_game()

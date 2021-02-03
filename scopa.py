@@ -1,4 +1,5 @@
 from random import shuffle
+
 import tactics
 
 colors = [tactics.denaro, " ", " ", " "]
@@ -41,7 +42,6 @@ class Scopa:
     def initiate_play(self):
         for _ in range(initial_table_size):
             self.table.append(self.deck.pop())
-
         for _ in range(no_of_players):
             hand = []
             self.draw_hand(hand)
@@ -143,14 +143,12 @@ class Scopa:
             self.hands[hand_number].remove(card_from_hand)
             self.piles[hand_number].append(card_from_hand)
             # remove cards from the table and add them to the pile
-            for card in cards_from_table:
-                self.table.remove(card)
-                self.piles[hand_number].append(card)
-
+            for card_from_table in cards_from_table:
+                self.table.remove(card_from_table)
+                self.piles[hand_number].append(card_from_table)
             # if no cards left on the table, increase scopa count
             if len(self.table) == 0 and not len(self.deck) == 0:
                 self.scopa_count[hand_number] += 1
-
             return potential_takes[best_take_index]
 
         else:
