@@ -1,7 +1,7 @@
 from itertools import chain, combinations
 
 denaro = "*"
-settebello_symbol = "07"+denaro
+settebello_symbol = "07" + denaro
 lay_card_button_name = "Połóż kartę"
 claim_cards_button_name = "Zbierz karty"
 opponent_hand_frame_name = "Ręka przeciwnika"
@@ -59,7 +59,7 @@ def get_no_of_denars(cards):
 def get_score_for_take(take, table):
     card_from_hand, cards_from_table = take
     all_cards = list(cards_from_table) + [card_from_hand]
-    score  = has_settebello(all_cards) * settebello_factor
+    score = has_settebello(all_cards) * settebello_factor
     score += get_no_of_denars(all_cards) * denar_factor
     score += len(cards_from_table) * card_factor
     score += get_no_of_sevens(all_cards) * seven_factor
