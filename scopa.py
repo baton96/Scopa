@@ -163,17 +163,18 @@ class Scopa:
 
     # this function calculates results of a pile with given number
     def calculate_score(self, pile_number):
+        pile = self.piles[pile_number]
         score = 0
         # one point for settebello
-        if tactics.settebello(self.piles[pile_number]):
+        if tactics.settebello(pile):
             score += 1
 
         # check if any other hand has more or the same number of sevens, cards and denars
-        no_of_sevens = tactics.sevens(self.piles[pile_number])
+        no_of_sevens = tactics.sevens(pile)
         more_sevens = True
-        no_of_cards = len(self.piles[pile_number])
+        no_of_cards = len(pile)
         more_cards = True
-        no_of_denars = tactics.denars(self.piles[pile_number])
+        no_of_denars = tactics.denars(pile)
         more_denars = True
         for i in range(len(self.piles)):
             if i != pile_number:
