@@ -176,31 +176,19 @@ class Scopa(object):
         if tactics.has_settebello(pile):
             score += 1
 
-        # check if any other hand has more or the same number of sevens, cards and denars
-        no_of_sevens = tactics.get_no_of_sevens(pile)
-        more_sevens = True
-        no_of_cards = len(pile)
-        more_cards = True
-        no_of_denars = tactics.get_no_of_denars(pile)
-        more_denars = True
-        for other_pile in self.piles:
-            if other_pile != pile:
-                if tactics.get_no_of_sevens(other_pile) >= no_of_sevens:
-                    more_sevens = False
-                if len(other_pile) >= no_of_cards:
-                    more_cards = False
-                if tactics.get_no_of_denars(other_pile) >= no_of_denars:
-                    more_denars = False
-
-        # add one point for each
-        if more_sevens:
-            score += 1
-        if more_cards:
-            score += 1
-        if more_denars:
-            score += 1
+        for criterion in [tactics.get_no_of_sevens, tactics.get_no_of_denars, len]:
+            if self.has_the_most_of_sth(pile, criterion):
+                score += 1
 
         # finally add scopa points
         score += self.scopa_count[pile_number]
 
         return score
+
+    def has_the_most_of_sth(self, pile, criterion):
+        criterion_value = criterion(pile)
+        for other_pile in self.piles:
+            if other_pile != pile:
+                if criterion(other_pile) >= criterion_value:
+                    return False
+        return True
