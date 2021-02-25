@@ -1,5 +1,7 @@
+from itertools import chain, combinations
+
 denaro = "*"
-settebello_symbol = "07"+denaro
+settebello_symbol = "07" + denaro
 lay_card_button_name = "Połóż kartę"
 claim_cards_button_name = "Zbierz karty"
 opponent_hand_frame_name = "Ręka przeciwnika"
@@ -14,95 +16,60 @@ card_factor = 1
 seven_factor = 5
 denar_factor = 2
 scopa_factor = 10
-leaving_single_card_factor = -3
+leaving_one_card_factor = -3
 leaving_two_cards_factor = -1
 
 
-def powerset(s):
-    x = len(s)
-    masks = [1 << i for i in range(x)]
-    for i in range(1 << x):
-        yield [ss for mask, ss in zip(masks, s) if i & mask]
+def get_powerset(table):
+    return chain.from_iterable(
+        combinations(table, size) for size in range(len(table) + 1)
+    )
 
 
 # returns the list of all possible sums of table, along with cards that are part of this combinat
 # but only if the sum is possible to be taken
-def all_takes_with_sum(s):
-    # store all the sublists
-    ps = powerset(s)
+def get_takes_with_sum(table):
+    powerset = get_powerset(table)
     takes_with_sum = []
 
-    for cset in ps:
-        take_sum = sum_of_cards(cset)
-        # if the sum is equal or smaller than threshold, append it -
+    for take_cards in powerset:
+        take_sum = get_sum_of_cards(take_cards)
         # in scopa sums between 8 and 10 as well as anything over 13 is not a valid take
         if (1 <= take_sum <= 7) or (11 <= take_sum <= 13):
-            takes_with_sum.append([take_sum, cset])
-
+            takes_with_sum.append([take_sum, take_cards])
     return takes_with_sum
 
 
-# returns the sum of cards in a list
-def sum_of_cards(clist):
-    val = 0
-    for i in range(0, len(clist)):
-        card_val = clist[i][:2]
-        val = val + int(card_val)
-    return val
+def get_sum_of_cards(cards):
+    return sum(int(card[:2]) for card in cards)
 
 
-# return true if settebello
-def settebello(cards):
-    for card in cards:
-        if card == settebello_symbol:
-            return True
-    return False
+def has_settebello(cards):
+    return settebello_symbol in cards
 
 
-# returns count of sevens
-def sevens(cards):
-    sevens_count = 0
-    for card in cards:
-        if card[1] == "7":
-            sevens_count += 1
-    return sevens_count
+def get_no_of_sevens(cards):
+    return sum(card[1] == "7" for card in cards)
 
 
-# returns count of denars
-def denars(cards):
-    denars_count = 0
-    for card in cards:
-        if card[2] == denaro:
-            denars_count += 1
-    return denars_count
+def get_no_of_denars(cards):
+    return sum(card[2] == denaro for card in cards)
 
 
-# get the score for take
 def get_score_for_take(take, table):
-    score = len(take[1]*card_factor)
-    if take[0] == "07D" or settebello(take[1]):
-        score += settebello_factor
-    if take[0][2] == denaro:
-        score += denar_factor
-    score += (denars(take[1]) * denar_factor)
-    if take[0][1] == "7":
-        score += seven_factor
-    score += (sevens(take[1]) * seven_factor)
-    if len(take[1]) == len(table):
-        score += scopa_factor
-    if len(take[1])+2 == len(table):
-        score += leaving_two_cards_factor
-    if len(take[1])+1 == len(table):
-        score += leaving_single_card_factor
+    card_from_hand, cards_from_table = take
+    all_cards = list(cards_from_table) + [card_from_hand]
+    score = has_settebello(all_cards) * settebello_factor
+    score += get_no_of_denars(all_cards) * denar_factor
+    score += len(cards_from_table) * card_factor
+    score += get_no_of_sevens(all_cards) * seven_factor
+
+    no_cards_taken = len(cards_from_table)
+    score_bonuses = {
+        no_cards_taken + 0: scopa_factor,
+        no_cards_taken + 1: leaving_one_card_factor,
+        no_cards_taken + 2: leaving_two_cards_factor
+    }
+    score += score_bonuses.get(len(table), 0)
 
     return score
-
-
-# this function selects a card to be dropped from table
-def select_card_to_be_dropped(hand, table):
-    # drop the lowest
-    lowest = hand[0]
-    for i in range(1, len(hand)):
-        if int(lowest[:1]) > int(hand[i][:1]):
-            lowest = hand[i]
-    return lowest

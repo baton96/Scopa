@@ -1,9 +1,23 @@
 import sys
-from PyQt5.QtWidgets import *
+
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QGroupBox, QPushButton, QMessageBox
+
 import tactics
 
-class ScopaForm(QDialog):
 
+# removes all widgets from given layout
+def remove_all_widgets(layout):
+    widget_range = reversed(range(layout.count()))
+    for i in widget_range:
+        widget_to_remove = layout.itemAt(i).widget()
+        # remove it from the layout list
+        layout.removeWidget(widget_to_remove)
+        # remove it from the gui
+        widget_to_remove.setParent(None)
+
+
+# noinspection PyArgumentList
+class ScopaForm(QDialog):
     opponent_buttons = []
     table_buttons = []
     my_hand_buttons = []
@@ -15,13 +29,13 @@ class ScopaForm(QDialog):
         self.sc = sc
 
         # draw the form with three horizontal layouts on top of each other
-        self.main_layout=QVBoxLayout()
+        self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(QLabel(tactics.opponent_hand_frame_name))
-        self.opponent_hand_layout=QHBoxLayout()
+        self.opponent_hand_layout = QHBoxLayout()
 
         self.main_layout.addLayout(self.opponent_hand_layout)
 
-        #draw table
+        # draw table
         self.group_box = QGroupBox(tactics.table_frame_name)
         self.vbox = QHBoxLayout()
 
@@ -30,15 +44,14 @@ class ScopaForm(QDialog):
 
         # draw my hand
         self.main_layout.addWidget(QLabel(tactics.my_hand_frame_name))
-        self.my_hand_layout=QHBoxLayout()
-
+        self.my_hand_layout = QHBoxLayout()
 
         self.main_layout.addLayout(self.my_hand_layout)
 
         # add action buttons
         self.main_layout.addWidget(QLabel(tactics.actions_frame_name))
 
-        self.my_action_layout=QHBoxLayout()
+        self.my_action_layout = QHBoxLayout()
 
         # then add two buttons - for claiming the cards from the table
         self.claim_cards_button = QPushButton(tactics.claim_cards_button_name)
@@ -58,29 +71,18 @@ class ScopaForm(QDialog):
         self.setLayout(self.main_layout)
         self.setWindowTitle("Scopa")
 
-    # removes all widgets from given layout
-    def remove_all_widgets(self, layout):
-        widget_range=reversed(range(layout.count()))
-        for i in widget_range:
-            widgetToRemove = layout.itemAt(i).widget()
-            button_name = widgetToRemove.text()
-            # remove it from the layout list
-            layout.removeWidget(widgetToRemove)
-            # remove it from the gui
-            widgetToRemove.setParent(None)
-
     # this function clears the form from all items in the view
     # empties all the global collections
     # and sets all the flags to False
     def clear_form(self):
-        self.remove_all_widgets(self.opponent_hand_layout)
-        self.opponent_buttons=[]
+        remove_all_widgets(self.opponent_hand_layout)
+        self.opponent_buttons = []
 
-        self.remove_all_widgets(self.vbox)
-        self.table_buttons=[]
+        remove_all_widgets(self.vbox)
+        self.table_buttons = []
 
-        self.remove_all_widgets(self.my_hand_layout)
-        self.my_hand_buttons=[]
+        remove_all_widgets(self.my_hand_layout)
+        self.my_hand_buttons = []
 
     # sets buttons "Claim cards" and "Lay card" as visible, OK as invisible
     def enable_button_for_my_move(self):
@@ -95,8 +97,8 @@ class ScopaForm(QDialog):
         self.OK_button.setVisible(True)
 
     # draw opponent hand making only the button indicated enabled and checked
-    def draw_opponent_hand(self, card_to_display = ""):
-        if card_to_display!="":
+    def draw_opponent_hand(self, card_to_display=""):
+        if card_to_display != "":
             displayed_button = QPushButton(card_to_display)
             displayed_button.setEnabled(True)
             displayed_button.setCheckable(True)
@@ -104,16 +106,18 @@ class ScopaForm(QDialog):
             self.opponent_hand_layout.addWidget(displayed_button)
             self.opponent_buttons.append(displayed_button)
 
-        for opponent_card in self.sc.hands[1]:
+        for _ in self.sc.hands[1]:
             opponent_button = QPushButton("XX")
             opponent_button.setEnabled(False)
             # add button for each opponent hand
             self.opponent_hand_layout.addWidget(opponent_button)
             self.opponent_buttons.append(opponent_button)
 
-    def draw_table(self, disable_cards_not_displayed, cards_to_display=[]):
+    def draw_table(self, disable_cards_not_displayed, cards_to_display=None):
 
         # show button for each card on the table
+        if cards_to_display is None:
+            cards_to_display = []
         for table_card in self.sc.table:
             table_button = QPushButton(table_card)
             table_button.setGeometry(200, 150, 100, 40)
@@ -148,7 +152,6 @@ class ScopaForm(QDialog):
     # this method prepares the form for my move
     def my_move(self):
         self.sc.draw_hand_if_necessary(0)
-        my_hand=self.sc.hands[0]
         self.clear_form()
 
         self.draw_opponent_hand()
@@ -160,9 +163,9 @@ class ScopaForm(QDialog):
 
     # display the form for opponent move
     def opponent_move(self):
-        take=self.sc.play_hand(1)
-        card_from_hand=take[0]
-        cards_from_table=take[1]
+        take = self.sc.play_hand(1)
+        card_from_hand = take[0]
+        cards_from_table = take[1]
 
         self.clear_form()
 
@@ -170,18 +173,16 @@ class ScopaForm(QDialog):
         self.draw_table(True, cards_from_table)
         self.draw_my_hand(False)
 
-        if len(cards_from_table)>0:
+        if len(cards_from_table) > 0:
             self.last_claimed_hand = 1
 
         self.enable_button_for_opponent_move()
 
-
-        #draw both hands if are empty
+        # draw both hands if are empty
         self.sc.draw_hand_if_necessary(0)
         no_more_cards = self.sc.draw_hand_if_necessary(1)
         if no_more_cards:
             self.finish_game()
-
 
     # uncheck any buttons other than the one clicked
     def disable_all_but_this(self):
@@ -200,16 +201,16 @@ class ScopaForm(QDialog):
         for table_btn in self.table_buttons:
             if table_btn.isChecked():
                 table.append(table_btn.text())
-                table_card_set=True
+                table_card_set = True
 
-        sum_of_table=tactics.sum_of_cards(table)
+        sum_of_table = tactics.get_sum_of_cards(table)
 
-        hand_card_set=False
-        hand_card_value=-1
+        hand_card_set = False
+        hand_card_value = -1
         for hand_btn in self.my_hand_buttons:
             if hand_btn.isChecked():
-                hand_card_set=True
-                hand_card_value=int(hand_btn.text()[:2])
+                hand_card_set = True
+                hand_card_value = int(hand_btn.text()[:2])
 
         self.lay_card_button.setEnabled(hand_card_set and not table_card_set)
 
@@ -235,14 +236,14 @@ class ScopaForm(QDialog):
     def pressed_claim_cards(self):
         for button2 in self.my_hand_buttons:
             if button2.isChecked():
-                card_from_hand=button2.text()
+                card_from_hand = button2.text()
                 self.sc.hands[0].remove(card_from_hand)
                 self.sc.piles[0].append(card_from_hand)
                 break
 
         for button in self.table_buttons:
             if button.isChecked():
-                card_from_table=button.text()
+                card_from_table = button.text()
                 self.sc.table.remove(card_from_table)
                 self.sc.piles[0].append(card_from_table)
 
@@ -263,14 +264,13 @@ class ScopaForm(QDialog):
             self.sc.piles[self.last_claimed_hand].append(card)
             self.sc.table.remove(card)
 
-        my_score = self.sc.calculate_score(0)
-        opponent_score = self.sc.calculate_score(1)
+        my_score = self.sc.get_score(0)
+        opponent_score = self.sc.get_score(1)
 
         message = "Moje karty: " + str(len(self.sc.piles[0])) + ", w tym denarów "
-        message += str(tactics.denars(self.sc.piles[0])) + ", wynik: " + str(my_score)
+        message += str(tactics.get_no_of_denars(self.sc.piles[0])) + ", wynik: " + str(my_score)
         message += "\nPrzeciwnika: " + str(len(self.sc.piles[1])) + ", w tym denarów "
-        message += str(tactics.denars(self.sc.piles[1])) + " wynik: " + str(opponent_score)
-
+        message += str(tactics.get_no_of_denars(self.sc.piles[1])) + " wynik: " + str(opponent_score)
 
         msg = QMessageBox()
         msg.setText("Scopa finished")
@@ -280,9 +280,3 @@ class ScopaForm(QDialog):
 
         # self.sc.print_game_results()
         sys.exit(0)
-
-
-
-
-
-

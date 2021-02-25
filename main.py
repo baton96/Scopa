@@ -2,33 +2,28 @@
 # Scopa rules can be found here https://en.wikipedia.org/wiki/Scopa
 
 import sys
-import uipyqt
-import scopa
-from PyQt5.QtWidgets import *
 
-# how many
+import scopa
+import uipyqt
 
 
 # this is the main game loop
-"""
 def run_game():
-    while sum_of_all_cards_in_game() != 0:
-        for h in range(0, no_of_players):
-            play_hand(h)
-            # print_status()
-            # check_sum_of_cards()
-
+    sc = scopa.Scopa()
+    while sc.get_no_of_cards_in_game() != 0:
+        for h in range(scopa.no_of_players):
+            # sc.print_short_status()
+            sc.play_hand(h)
+            sc.check_no_of_cards()
     # if any cards were left on the table, get them to the last person taking cards from the table
-    for card in table.copy():
-        piles[last_hand_played].append(card)
-        table.remove(card)
-
-    print_game_results()
-"""
+    for card in sc.table.copy():
+        sc.piles[sc.last_hand_played].append(card)
+        sc.table.remove(card)
+    sc.print_game_results()
 
 
 def run_game_with_form():
-    app = QApplication(sys.argv)
+    app = uipyqt.QApplication(sys.argv)
     sc = scopa.Scopa()
     ex = uipyqt.ScopaForm(sc)
 
@@ -39,7 +34,4 @@ def run_game_with_form():
 
 
 if __name__ == '__main__':
-    run_game_with_form()
-
-    # print_status()
-    # run_game()
+    run_game()
